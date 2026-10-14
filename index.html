@@ -17,6 +17,18 @@
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px;max-width:620px}
 .chip{background:var(--paper);border:1px solid var(--ink);padding:6px 12px;font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;transition:background .15s,color .15s}
 .chip:hover,.chip:focus-visible{background:var(--ink);color:var(--paper)}
+
+/* Readable desktop columns and compact responsive spacing */
+.mono{font-size:12px}
+.section{grid-template-columns:minmax(220px,.85fr) minmax(0,2.15fr);gap:32px}
+.principles{gap:28px}
+.principles h3{font-size:20px;line-height:1.3;margin:14px 0}
+.principles p{font-size:16px;line-height:1.65}
+.stat small{font-size:12px;line-height:1.6}
+.experience .daynote,.level{font-size:14px;line-height:1.6}
+@media(min-width:1000px){.principles h3{min-height:52px}}
+@media(max-width:1000px) and (min-width:701px){.section{grid-template-columns:1fr}.principles{gap:24px}}
+@media(max-width:700px){.section{grid-template-columns:1fr;gap:20px}.principles{gap:20px}.mono{font-size:11px}.stat small{font-size:10px}.principles p{font-size:16px}}
 </style>
 </head>
 
