@@ -29,6 +29,9 @@
 @media(min-width:1000px){.principles h3{min-height:52px}}
 @media(max-width:1000px) and (min-width:701px){.section{grid-template-columns:1fr}.principles{gap:24px}}
 @media(max-width:700px){.section{grid-template-columns:1fr;gap:20px}.principles{gap:20px}.mono{font-size:11px}.stat small{font-size:10px}.principles p{font-size:16px}}
+
+/* Nichts-Redaktion: automatisch wechselndes Amtsblatt */
+.amtsblatt{margin:36px 0;padding:30px;background:#d1cfc7;border:2px solid #38352f;color:#24231f;font-family:'Courier New',monospace;box-shadow:5px 6px 0 #38352f}.amtsblatt h2{font-family:'Courier New',monospace;font-size:clamp(25px,4vw,40px);letter-spacing:-.035em}.amtsblatt .seal{display:inline-block;border:4px double #982c29;color:#982c29;font-weight:700;padding:10px 15px;transform:rotate(-4deg);margin:16px 0}.amtsblatt .btn{font-family:inherit}.amtsblatt p{font-size:clamp(17px,2vw,24px);line-height:1.5;max-width:850px}@media(max-width:700px){.amtsblatt{padding:18px}}
 </style>
 </head>
 
@@ -92,6 +95,18 @@
 </div>
 </section>
 
+
+<section class="amtsblatt" id="amtsblatt" aria-labelledby="amtsblatt-heading">
+<div class="mono">VEB KOMBINAT DER LPG DES NICHTS</div>
+<div class="mono">Erster Vorsitzender: Genosse ERICH</div>
+<hr style="border:0;border-top:2px solid #38352f;margin:18px 0">
+<h2 id="amtsblatt-heading">Amtliches Mitteilungsblatt</h2>
+<div class="mono" id="meldung-nummer">Vorgang wird zugeteilt</div>
+<p id="meldung-text" aria-live="polite">Die heutige Tagesproduktion von null Einheiten wurde vollständig erreicht.</p>
+<div class="seal">ZUR KENNTNIS GENOMMEN</div>
+<div class="actions"><button class="btn" id="meldung-teilen">Meldung weiterleiten ↗</button><button class="btn light" id="meldung-weitere">Nächste Meldung ↗</button></div>
+<small>Fiktive Satirebehörde. Keine amtliche Stelle. Neue Tagesmeldung automatisch, ohne Anmeldung.</small>
+</section>
 <section class="experience" aria-labelledby="bescheid-heading">
 <div class="experience-head">
 <div>
@@ -284,7 +299,7 @@ function caseBlob(){
     x.fillStyle='#f4efdf';x.fillRect(0,0,1080,1080);
     x.fillStyle='#d7fb55';x.fillRect(0,0,1080,24);
     x.fillStyle='#20241d';x.font='bold 28px Arial';
-    x.fillText('INSTITUT FÜRS NICHTS',65,98);
+    x.font='bold 25px Arial';x.fillText('VEB KOMBINAT DER LPG DES NICHTS',65,98);
     x.font='22px monospace';
     x.fillText('AKTENZEICHEN '+currentCase.number,65,155);
     x.font='bold 76px Arial';
@@ -299,7 +314,7 @@ function caseBlob(){
     x.fillText('BEARBEITUNG ERFOLGREICH VERMIEDEN',92,888);
     x.font='23px Arial';
     x.fillText('Satire. Kein amtliches Dokument.',65,976);
-    x.fillText('Institut fürs Nichts · Kesch',65,1014);
+    x.fillText('VEB Kombinat der LPG des Nichts',65,1014);
     c.toBlob(resolve,'image/png')
   })
 }
@@ -330,6 +345,25 @@ document.getElementById('share-case').onclick=async()=>{
     }else tell('Nutze den Bilddownload und teile den Bescheid.')
   }catch(e){if(e.name!=='AbortError')tell('Teilen ging nicht. Nutze den Bilddownload.')}
 };
+
+/* Nichts-Redaktion: täglich neue Meldung, unabhängig von Beelink und Cron. */
+let amtsmeldungen=[{id:'N-001',text:'Die heutige Tagesproduktion von null Einheiten wurde vollständig erreicht.'}];
+let meldungIndex=0;
+const meldungText=document.getElementById('meldung-text');
+const meldungNummer=document.getElementById('meldung-nummer');
+function zeigeMeldung(){const m=amtsmeldungen[meldungIndex];meldungText.textContent=m.text;meldungNummer.textContent='AMTLICHE MITTEILUNG / '+m.id;}
+async function ladeAmtsblatt(){
+ try{const res=await fetch('./nichts-redaktion/meldungen.json',{cache:'no-cache'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(!Array.isArray(data.meldungen)||!data.meldungen.length)throw Error('Keine Meldungen');amtsmeldungen=data.meldungen.filter(m=>typeof m.id==='string'&&typeof m.text==='string');if(!amtsmeldungen.length)throw Error('Ungültige Meldungen');}catch(e){console.warn('Amtsblatt nutzt Ersatzmeldung:',e.message)}
+ const datum=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Berlin'}).format(new Date());
+ const t=Math.floor(Date.parse(datum+'T00:00:00Z')/86400000);
+ meldungIndex=((t%amtsmeldungen.length)+amtsmeldungen.length)%amtsmeldungen.length;zeigeMeldung();
+}
+document.getElementById('meldung-weitere').onclick=()=>{meldungIndex=(meldungIndex+1)%amtsmeldungen.length;zeigeMeldung()};
+document.getElementById('meldung-teilen').onclick=async()=>{
+ const m=amtsmeldungen[meldungIndex];const text='VEB KOMBINAT DER LPG DES NICHTS\\n'+m.id+'\\n'+m.text+'\\n'+location.href;
+ try{if(navigator.share)await navigator.share({title:'Amtliche Mitteilung des Nichts',text});else if(navigator.clipboard){await navigator.clipboard.writeText(text);tell('Meldung kopiert.')}else tell('Kopiere die Seitenadresse.');}catch(e){if(e.name!=='AbortError')tell('Teilen fehlgeschlagen.');}
+};
+ladeAmtsblatt();
 </script>
 </body>
 </html>
