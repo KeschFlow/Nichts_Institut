@@ -1,0 +1,69 @@
+{
+  "organisation": "VEB Kombinat der LPG des Nichts",
+  "vorsitz": "Genosse ERICH",
+  "art": "fiktive Satire",
+  "version": 1,
+  "website": "https://keschflow.github.io/Nichts_Institut/",
+  "meldungen": [
+    {
+      "id": "N-001",
+      "text": "Das Kombinat bestätigt: Die heutige Tagesproduktion von null Einheiten wurde vollständig erreicht."
+    },
+    {
+      "id": "N-002",
+      "text": "Aufgrund fehlender Vorgänge verlängert sich die Bearbeitungszeit auf unbestimmte Zeit."
+    },
+    {
+      "id": "N-003",
+      "text": "Der Erste Vorsitzende Genosse ERICH hat eine Sondersitzung einberufen. Tagesordnungspunkte liegen nicht vor."
+    },
+    {
+      "id": "N-004",
+      "text": "Die Abteilung für Beschwerden meldet einen historischen Rückgang bearbeiteter Beschwerden auf null."
+    },
+    {
+      "id": "N-005",
+      "text": "Für die kommende Woche wurde ein umfassender Maßnahmenverzicht beschlossen."
+    },
+    {
+      "id": "N-006",
+      "text": "Die Inventur ergab: Nichts fehlt. Das fehlende Nichts wird nachbestellt."
+    },
+    {
+      "id": "N-007",
+      "text": "Der Antrag auf Aufschub der Vertagung wurde vorsorglich zurückgestellt."
+    },
+    {
+      "id": "N-008",
+      "text": "Das Kombinat sucht Fachkräfte mit nachweislicher Erfahrung in konsequenter Untätigkeit."
+    },
+    {
+      "id": "N-009",
+      "text": "Die Planerfüllung wurde mit 100 Prozent bewertet. Die Planvorgabe betrug null."
+    },
+    {
+      "id": "N-010",
+      "text": "Die heutige Schicht wurde wegen akuter Ereignislosigkeit rückwirkend annulliert."
+    },
+    {
+      "id": "N-011",
+      "text": "Der Ausschuss zur Vermeidung unnötiger Ausschüsse hat seine Gründung verschoben."
+    },
+    {
+      "id": "N-012",
+      "text": "Der Vorsitzende teilt mit: Die Lage ist unverändert. Das bleibt vorerst so."
+    },
+    {
+      "id": "N-013",
+      "text": "Die Warteschlange ist leer. Bitte ziehen Sie trotzdem eine Nummer."
+    },
+    {
+      "id": "N-014",
+      "text": "Für herausragende Nichtleistung wird in diesem Monat keine Auszeichnung verliehen."
+    },
+    {
+      "id": "N-015",
+      "text": "Die Sitzung zur Beschleunigung des Stillstands wurde aus Zeitgründen vertagt."
+    }
+  ]
+}
