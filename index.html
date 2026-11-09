@@ -32,6 +32,9 @@
 
 /* Nichts-Redaktion: automatisch wechselndes Amtsblatt */
 .amtsblatt{margin:36px 0;padding:30px;background:#d1cfc7;border:2px solid #38352f;color:#24231f;font-family:'Courier New',monospace;box-shadow:5px 6px 0 #38352f}.amtsblatt h2{font-family:'Courier New',monospace;font-size:clamp(25px,4vw,40px);letter-spacing:-.035em}.amtsblatt .seal{display:inline-block;border:4px double #982c29;color:#982c29;font-weight:700;padding:10px 15px;transform:rotate(-4deg);margin:16px 0}.amtsblatt .btn{font-family:inherit}.amtsblatt p{font-size:clamp(17px,2vw,24px);line-height:1.5;max-width:850px}@media(max-width:700px){.amtsblatt{padding:18px}}
+
+/* Historical document display and 30-day collectible */
+.archiv{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.85fr);gap:32px;align-items:center;margin:45px 0;padding:30px;border:1px solid #806d52;background:#e8d8b9;color:#30271e}.archiv h2{font-family:Georgia,serif}.archiv p{max-width:600px}.archiv img{width:100%;max-height:650px;object-fit:contain;box-shadow:7px 9px 0 #75654b}.archiv .btn{background:#32291f;color:#f5ead2;border-color:#32291f}.archiv .btn.light{background:transparent;color:#32291f}.archiv .note{font:12px/1.5 'Courier New',monospace}.archiv .count{font:700 25px 'Courier New',monospace}@media(max-width:700px){.archiv{grid-template-columns:1fr;padding:18px}}
 </style>
 </head>
 
@@ -106,6 +109,20 @@
 <div class="seal">ZUR KENNTNIS GENOMMEN</div>
 <div class="actions"><button class="btn" id="meldung-teilen">Meldung weiterleiten ↗</button><button class="btn light" id="meldung-weitere">Nächste Meldung ↗</button></div>
 <small>Fiktive Satirebehörde. Keine amtliche Stelle. Neue Tagesmeldung automatisch, ohne Anmeldung.</small>
+</section>
+
+<section class="archiv" id="kontrollheft" aria-labelledby="kontrollheft-heading">
+<div>
+<span class="mono">Historisches Vorbild · fiktive Verwaltungssatire</span>
+<h2 id="kontrollheft-heading">30 Tage.<br>Amtlich nichts getan.</h2>
+<p>Das Nichtstun-Kontrollheft: Ein Feld für jeden Tag, an dem du dir eine Pause gegönnt hast. Kein Leistungsdruck, kein echtes Amt. Nur ein absurdes Stück Bürokratie zum Mitnehmen.</p>
+<p class="count" id="ruhe-stand">0 / 30 Tage vermerkt</p>
+<div class="actions"><button class="btn" id="ruhe-tag">Heutigen Ruhetag vermerken ↗</button><button class="btn light" id="ruhe-download">Kontrollheft als Bild ↓</button></div>
+<p class="note" id="ruhe-info" aria-live="polite">Ein Eintrag pro Kalendertag. Der Stand bleibt nur auf diesem Gerät.</p>
+<p class="note">Früher war nicht alles besser – aber auch nicht alles schlechter. Wir erinnern an Alltagsgeschichte, ohne Unfreiheit und Überwachung zu beschönigen.</p>
+<a class="btn light" href="#unterstuetzen">Das Nichts freiwillig unterstützen ↗</a>
+</div>
+<img src="./nichts-redaktion/assets/musterbescheid.svg" alt="Fiktiver vergilbter VEB-Bescheid mit Nichtstun-Kontrollheft und rotem Stempel" loading="lazy" width="900" height="1160">
 </section>
 <section class="experience" aria-labelledby="bescheid-heading">
 <div class="experience-head">
@@ -364,6 +381,19 @@ document.getElementById('meldung-teilen').onclick=async()=>{
  try{if(navigator.share)await navigator.share({title:'Amtliche Mitteilung des Nichts',text});else if(navigator.clipboard){await navigator.clipboard.writeText(text);tell('Meldung kopiert.')}else tell('Kopiere die Seitenadresse.');}catch(e){if(e.name!=='AbortError')tell('Teilen fehlgeschlagen.');}
 };
 ladeAmtsblatt();
+
+/* 30-day Kontrollheft: local-only; one voluntary entry per Berlin calendar day. */
+const ruheKey='veb-nichts-ruhetage-v1';
+function ruheTage(){try{const v=JSON.parse(localStorage.getItem(ruheKey)||'[]');return Array.isArray(v)?v.filter(x=>/^\\d{4}-\\d{2}-\\d{2}$/.test(x)).slice(-30):[]}catch{return []}}
+function ruheZeigen(){const n=ruheTage().length;document.getElementById('ruhe-stand').textContent=n+' / 30 Tage vermerkt';document.getElementById('ruhe-tag').disabled=n>=30||ruheTage().includes(berlinDay());}
+ruheZeigen();
+document.getElementById('ruhe-tag').onclick=()=>{const a=ruheTage(),today=berlinDay();if(a.length>=30||a.includes(today))return;a.push(today);try{localStorage.setItem(ruheKey,JSON.stringify(a))}catch{tell('Speichern auf diesem Gerät nicht möglich.');return}ruheZeigen();tell('Ruhetag amtlich vermerkt.')};
+document.getElementById('ruhe-download').onclick=()=>{
+ const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d');x.fillStyle='#dfc7a1';x.fillRect(0,0,1080,1350);x.strokeStyle='#705b43';x.lineWidth=4;x.strokeRect(35,35,1010,1280);x.fillStyle='#29241d';x.font='bold 44px Courier New';x.fillText('VEB KOMBINAT DER LPG DES NICHTS',65,115);x.font='25px Courier New';x.fillText('Erster Vorsitzender: Genosse ERICH',65,163);x.beginPath();x.moveTo(65,190);x.lineTo(1015,190);x.stroke();x.font='bold 43px Courier New';x.fillText('NICHTSTUN-KONTROLLHEFT',65,280);x.font='27px Courier New';x.fillText('30 Tage planmaessiges Nichtstun',65,340);
+ const n=ruheTage().length;for(let i=0;i<30;i++){const col=i%6,row=Math.floor(i/6),px=65+col*159,py=410+row*125;x.strokeStyle='#705b43';x.lineWidth=2;x.strokeRect(px,py,145,108);x.fillStyle='#29241d';x.font='24px Courier New';x.fillText(String(i+1).padStart(2,'0'),px+12,py+32);if(i<n){x.strokeStyle='#264875';x.lineWidth=6;x.beginPath();x.moveTo(px+33,py+42);x.lineTo(px+114,py+91);x.moveTo(px+114,py+42);x.lineTo(px+33,py+91);x.stroke()}}
+ x.save();x.translate(590,1160);x.rotate(-.06);x.strokeStyle='#982c29';x.lineWidth=7;x.strokeRect(-225,-53,450,106);x.fillStyle='#982c29';x.font='bold 38px Courier New';x.fillText(n===30?'SOLL ERFUELLT':'IN BEARBEITUNG',-198,14);x.restore();x.fillStyle='#29241d';x.font='20px Courier New';x.fillText('FIKTIVE SATIREBEHOERDE - KEIN AMTLICHES DOKUMENT',65,1300);
+ c.toBlob(blob=>{if(!blob){tell('Bild konnte nicht erstellt werden.');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Nichtstun-Kontrollheft.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)},'image/png');
+};
 </script>
 </body>
 </html>
