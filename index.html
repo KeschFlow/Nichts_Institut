@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
+<link rel="canonical" href="https://keschflow.github.io/Nichts_Institut/">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4efdf">
@@ -209,7 +210,7 @@
 
 <footer>
 <span>© 2026 · Institut fürs Nichts · Satireprojekt von Kesch</span>
-<span>Anbieterangaben noch zu ergänzen</span>
+<span><a href="https://eddiesworld.de/impressum/">Impressum</a> · <a href="https://veb-kombinat-der-lpg-des-nichts.eddie-keschflow.chatgpt.site/datenschutz.html">Datenschutz</a></span>
 </footer>
 </div>
 
@@ -370,21 +371,21 @@ const meldungText=document.getElementById('meldung-text');
 const meldungNummer=document.getElementById('meldung-nummer');
 function zeigeMeldung(){const m=amtsmeldungen[meldungIndex];meldungText.textContent=m.text;meldungNummer.textContent='AMTLICHE MITTEILUNG / '+m.id;}
 async function ladeAmtsblatt(){
- try{const res=await fetch('./nichts-redaktion/meldungen.json',{cache:'no-cache'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(!Array.isArray(data.meldungen)||!data.meldungen.length)throw Error('Keine Meldungen');amtsmeldungen=data.meldungen.filter(m=>typeof m.id==='string'&&typeof m.text==='string');if(!amtsmeldungen.length)throw Error('Ungültige Meldungen');}catch(e){console.warn('Amtsblatt nutzt Ersatzmeldung:',e.message)}
+ try{const res=await fetch('./nichts-redaktion/meldungen.json',{cache:'no-cache'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(!Array.isArray(data.meldungen)||!data.meldungen.length)throw Error('Keine Meldungen');const valid=data.meldungen.filter(m=>typeof m?.id==='string'&&typeof m?.text==='string');if(!valid.length)throw Error('Ungültige Meldungen');amtsmeldungen=valid;}catch(e){console.warn('Amtsblatt nutzt Ersatzmeldung:',e.message)}
  const datum=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Berlin'}).format(new Date());
  const t=Math.floor(Date.parse(datum+'T00:00:00Z')/86400000);
  meldungIndex=((t%amtsmeldungen.length)+amtsmeldungen.length)%amtsmeldungen.length;zeigeMeldung();
 }
 document.getElementById('meldung-weitere').onclick=()=>{meldungIndex=(meldungIndex+1)%amtsmeldungen.length;zeigeMeldung()};
 document.getElementById('meldung-teilen').onclick=async()=>{
- const m=amtsmeldungen[meldungIndex];const text='VEB KOMBINAT DER LPG DES NICHTS\\n'+m.id+'\\n'+m.text+'\\n'+location.href;
+ const m=amtsmeldungen[meldungIndex];const text='VEB KOMBINAT DER LPG DES NICHTS\n'+m.id+'\n'+m.text+'\n'+location.href;
  try{if(navigator.share)await navigator.share({title:'Amtliche Mitteilung des Nichts',text});else if(navigator.clipboard){await navigator.clipboard.writeText(text);tell('Meldung kopiert.')}else tell('Kopiere die Seitenadresse.');}catch(e){if(e.name!=='AbortError')tell('Teilen fehlgeschlagen.');}
 };
 ladeAmtsblatt();
 
 /* 30-day Kontrollheft: local-only; one voluntary entry per Berlin calendar day. */
 const ruheKey='veb-nichts-ruhetage-v1';
-function ruheTage(){try{const v=JSON.parse(localStorage.getItem(ruheKey)||'[]');return Array.isArray(v)?v.filter(x=>/^\\d{4}-\\d{2}-\\d{2}$/.test(x)).slice(-30):[]}catch{return []}}
+function ruheTage(){try{const v=JSON.parse(localStorage.getItem(ruheKey)||'[]');return Array.isArray(v)?v.filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).slice(-30):[]}catch{return []}}
 function ruheZeigen(){const n=ruheTage().length;document.getElementById('ruhe-stand').textContent=n+' / 30 Tage vermerkt';document.getElementById('ruhe-tag').disabled=n>=30||ruheTage().includes(berlinDay());}
 ruheZeigen();
 document.getElementById('ruhe-tag').onclick=()=>{const a=ruheTage(),today=berlinDay();if(a.length>=30||a.includes(today))return;a.push(today);try{localStorage.setItem(ruheKey,JSON.stringify(a))}catch{tell('Speichern auf diesem Gerät nicht möglich.');return}ruheZeigen();tell('Ruhetag amtlich vermerkt.')};
@@ -395,5 +396,6 @@ document.getElementById('ruhe-download').onclick=()=>{
  c.toBlob(blob=>{if(!blob){tell('Bild konnte nicht erstellt werden.');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='Nichtstun-Kontrollheft.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),1500)},'image/png');
 };
 </script>
+<script src="./whatsapp.js" defer></script>
 </body>
 </html>

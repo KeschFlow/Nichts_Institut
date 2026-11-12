@@ -19,16 +19,17 @@ Die Nutzung des Bescheids ist kostenlos und unabhängig von einer Zahlung. Eine 
 
 ## Öffentliche Website
 
-[**VEB Kombinat der LPG des Nichts öffnen**](https://institut-nichtstun-kesch.eddie-keschflow.chatgpt.site/)
+[**VEB Kombinat der LPG des Nichts öffnen**](https://keschflow.github.io/Nichts_Institut/)
 
 Auf der öffentlichen Site können Besucher auch die Seite oder ihren Bescheid **per WhatsApp teilen**. Es werden keine Nachrichten automatisch an Kontakte versendet.
 
 ## Aufbau dieses Repositorys
 
-- `index.html` – die im GitHub-Repository enthaltene Webfassung.
+- `index.html` – die öffentliche Webfassung für GitHub Pages.
+- `whatsapp.js` – die freiwillige Teilen-Funktion.
 - `nichts-redaktion/` – Materialien der Nichts-Redaktion.
 
-**Wichtig:** Dieses GitHub-Repository mit seinem GitHub-Pages-Deployment und die oben verlinkte ChatGPT-Site sind derzeit **nicht automatisch synchronisiert**. Änderungen in diesem Repository erscheinen nicht von selbst auf der ChatGPT-Site.
+GitHub Pages veröffentlicht die Webfassung aus diesem Repository.
 
 ## Grundsätze
 
